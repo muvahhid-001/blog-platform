@@ -1,16 +1,20 @@
-.list-article {
-  color: rgba(0, 0, 0, 0.75);
-  position: relative;
+.list-full-article {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
   &__item {
+    margin: 0 15px;
+    position: relative;
     height: 140px;
     padding: 10px 15px;
-    margin: 0 10px;
+    width: 100%;
+    max-width: 938px;
+    height: 100%;
     background-color: white;
-    border-top-right-radius: 5px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    border-bottom-right-radius: 5px;
     box-shadow: 0px 0px 4px 1px rgba(31, 31, 31, 0.2);
   }
   &__up {
@@ -30,7 +34,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 20px;
+    font-size: clamp(15px, 5vw, 20px);
     color: rgba(24, 144, 255, 1);
   }
   &__author {
@@ -92,5 +96,8 @@
     margin: 0;
     margin-top: 5px;
     font-size: 14px;
+  }
+  &__body {
+    text-align: left;
   }
 }

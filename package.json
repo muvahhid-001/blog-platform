@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/redux-thunk": "^2.1.32",
     "antd": "^5.24.6",
+    "luxon": "^3.6.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-markdown": "^10.1.0",

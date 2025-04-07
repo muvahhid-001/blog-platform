@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { DateTime } from "luxon";
 import "./ListItem.scss";
 
 interface Author {
@@ -14,6 +15,10 @@ interface ListItemProps {
   author: Author;
   tagList: string[];
   favoritesCount: number;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+  favorited: boolean;
 }
 
 const ListItem = ({
@@ -23,18 +28,23 @@ const ListItem = ({
   author,
   tagList,
   favoritesCount = 0,
+  createdAt,
 }: ListItemProps) => {
-  const currentDate = new Date();
-  const formattedTime = currentDate.toLocaleDateString("ru-RU", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const navigate = useNavigate();
+  const goToFullArticle = () => {
+    navigate(`/article/${slug}`);
+  };
+
+  const dateString = createdAt.toString();
+  const date = DateTime.fromISO(dateString);
+  const formattedDate = date.toFormat("MMMM d, yyyy");
 
   return (
     <li className="list-article__item">
       <div className="list-article__up">
-        <button className="list-article__title">{title}</button>
+        <button className="list-article__title" onClick={goToFullArticle}>
+          {title}
+        </button>
         <div className="list-article__like-block">
           <button className="list-article__heart"></button>
           <p className="list-article__like-count">{favoritesCount}</p>
@@ -42,7 +52,7 @@ const ListItem = ({
         <div className="list-article__author">
           <div className="list-article__author-info">
             <p className="list-article__author-name">{author.username}</p>
-            <p className="list-article__author-time">{formattedTime}</p>
+            <p className="list-article__author-time">{formattedDate}</p>
           </div>
           <img
             className="list-article__author-photo"

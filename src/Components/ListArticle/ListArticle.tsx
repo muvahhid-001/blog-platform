@@ -1,9 +1,9 @@
+import { useState, useEffect } from "react";
 import { Pagination } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
 import { RootState, AppDispatch } from "../../Redux/store";
 import ListItem from "../ListItem/ListItem";
-import { fetchArticles } from "../../Redux/Articles/ArticlesSlice";
+import { fetchArticles } from "../../Redux/ArticlesActions";
 import "./ListArticle.scss";
 
 const ListArticle = () => {
@@ -12,7 +12,6 @@ const ListArticle = () => {
   const articlesCount = useSelector(
     (state: RootState) => state.articles.articlesCount
   );
-
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -22,28 +21,27 @@ const ListArticle = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <main>
       <ul className="list-article">
-        {articles.map((item, index) => {
-          return (
-            <ListItem
-              key={index}
-              title={item.title}
-              description={item.description}
-              slug={item.slug}
-              author={item.author}
-              tagList={item.tagList}
-              favoritesCount={item.favoritesCount}
-            />
-          );
-        })}
+        {articles.map((item, index) => (
+          <ListItem
+            key={index}
+            title={item.title}
+            description={item.description}
+            slug={item.slug}
+            author={item.author}
+            tagList={item.tagList}
+            favoritesCount={item.favoritesCount}
+            favorited={item.favorited}
+            updatedAt={item.updatedAt}
+            createdAt={item.createdAt}
+            body={item.body}
+          />
+        ))}
       </ul>
       <Pagination
         current={currentPage}

@@ -1,14 +1,13 @@
-import React from "react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchArticles } from "../../Redux/Articles/ArticlesSlice";
-import { AppDispatch } from "../../Redux/store";
-import { useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchArticles } from "../../Redux/ArticlesActions";
+import { AppDispatch, RootState } from "../../Redux/store";
+import { Routes, Route } from "react-router-dom";
 import Header from "../Header/Header";
 import "./App.scss";
 import ListArticle from "../ListArticle/ListArticle";
 import Spiner from "../Spin/Spin";
+import FullArticle from "../FullArticle/FullArticle";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,10 +18,16 @@ function App() {
   }, [dispatch]);
 
   return (
-    <React.Fragment>
+    <>
       <Header />
-      {articles.length === 0 ? <Spiner /> : <ListArticle />}
-    </React.Fragment>
+      <Routes>
+        <Route
+          path="/"
+          element={articles.length === 0 ? <Spiner /> : <ListArticle />}
+        />
+        <Route path="/article/:slug" element={<FullArticle />} />
+      </Routes>
+    </>
   );
 }
 

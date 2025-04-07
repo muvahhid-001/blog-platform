@@ -8,7 +8,74 @@ body {
   margin: 0;
   color: rgba(0, 0, 0, 0.85);
 }
-
+header {
+  width: 100%;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+@media (max-width: 720px) {
+  .list-full-article {
+    &__title {
+      max-width: 300px !important;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+@media (max-width: 480px) {
+  .list-full-article {
+    &__title {
+      font-size: 14px !important;
+      max-width: 150px !important;
+    }
+    &__description {
+      font-size: 13px !important;
+    }
+    &__body {
+      font-size: 13px !important;
+    }
+    &__author-name {
+      font-size: 14px !important;
+    }
+    &__author-time {
+      font-size: 10px !important;
+    }
+    &__author {
+      right: 6px !important;
+    }
+  }
+  .list-article {
+    &__author-name {
+      font-size: 14px !important;
+    }
+    &__author-time {
+      font-size: 10px !important;
+    }
+    &__tag-item {
+      max-width: 100px !important;
+      font-size: 8px !important;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    &__title {
+      width: 100%;
+      max-width: 100px !important;
+      font-size: 14px !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &__description {
+      width: 300px;
+      font-size: 11px !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
 @font-face {
   font-family: "Inter";
   src: url("../App/FontStyle/Inter-Regular.otf") format("opentype");

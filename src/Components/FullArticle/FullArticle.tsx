@@ -1,65 +1,91 @@
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../Redux/store";
+import { DateTime } from "luxon";
+import {
+  FETCH_FULLARTICLE_FAILED,
+  FETCH_FULLARTICLE_SUCCESS,
+} from "../../Redux/ArticlesActions";
 import "./FullArticle.scss";
+import { Dispatch } from "redux";
+import ReactMarkdown from "react-markdown";
+import Spiner from "../Spin/Spin";
 
-interface Author {
-  username: string;
-  image: string;
-  following: boolean;
-}
+const fetchData = (slug: string) => async (dispatch: Dispatch) => {
+  try {
+    const response = await fetch(
+      `https://blog-platform.kata.academy/api/articles/${slug}`
+    );
+    const data = await response.json();
+    dispatch({ type: FETCH_FULLARTICLE_SUCCESS, payload: data.article });
+  } catch (error) {
+    dispatch({ type: FETCH_FULLARTICLE_FAILED });
+  }
+};
 
-interface ListItemProps {
-  title?: string;
-  description?: string;
-  slug?: string;
-  author?: Author;
-  tagList?: string[];
-  favoritesCount?: number;
-}
+const FullArticle = () => {
+  const { slug } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
 
-const ListItem = ({
-  title = "Пусто",
-  description = "Пусто",
-  slug,
-  author,
-  tagList,
-  favoritesCount = 0,
-}: ListItemProps) => {
-  const currentDate = new Date();
-  const formattedTime = currentDate.toLocaleDateString("ru-RU", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  useEffect(() => {
+    if (slug) {
+      dispatch(fetchData(slug));
+    }
+  }, [slug, dispatch]);
+
+  const fullArticle = useSelector(
+    (state: RootState) => state.articles.fullArticle
+  );
+  if (!fullArticle) return <Spiner />;
+
+  const dateString = fullArticle.createdAt.toString();
+  const date = DateTime.fromISO(dateString);
+  const formattedDate = date.toFormat("MMMM d, yyyy");
 
   return (
-    <li className="list-article__item">
-      <div className="list-article__up">
-        <p className="list-article__title">{title}</p>
-        <div className="list-article__like-block">
-          <button className="list-article__heart"></button>
-          <p className="list-article__like-count">{favoritesCount}</p>
-        </div>
-        <div className="list-article__author">
-          <div className="list-article__author-info">
-            <p className="list-article__author-name">{author.username}</p>
-            <p className="list-article__author-time">{formattedTime}</p>
+    <div className="list-full-article">
+      <div className="list-full-article__item">
+        <div className="list-full-article__up">
+          <button className="list-full-article__title">
+            {fullArticle.title}
+          </button>
+          <div className="list-full-article__like-block">
+            <button className="list-full-article__heart"></button>
+            <p className="list-full-article__like-count">
+              {fullArticle.favoritesCount}
+            </p>
           </div>
-          <img
-            className="list-article__author-photo"
-            src={author.image}
-            alt={author.username}
-          ></img>
+          <div className="list-full-article__author">
+            <div className="list-full-article__author-info">
+              <p className="list-full-article__author-name">
+                {fullArticle.author.username}
+              </p>
+              <p className="list-full-article__author-time">{formattedDate}</p>
+            </div>
+            <img
+              className="list-full-article__author-photo"
+              src={fullArticle.author.image}
+              alt={fullArticle.author.username}
+            ></img>
+          </div>
+        </div>
+        <ul className="list-full-article__tag-list">
+          {fullArticle.tagList.slice(0, 6).map((tag, index) => (
+            <li key={index} className="list-full-article__tag-item">
+              {tag}
+            </li>
+          ))}
+        </ul>
+        <p className="list-full-article__description">
+          {fullArticle.description}
+        </p>
+        <div className="list-full-article__body">
+          <ReactMarkdown>{fullArticle.body}</ReactMarkdown>
         </div>
       </div>
-      <ul className="list-article__tag-list">
-        {tagList.slice(0, 6).map((tag, index) => (
-          <li key={index} className="list-article__tag-item">
-            {tag}
-          </li>
-        ))}
-      </ul>
-      <p className="list-article__description">{description}</p>
-    </li>
+    </div>
   );
 };
 
-export default ListItem;
+export default FullArticle;
