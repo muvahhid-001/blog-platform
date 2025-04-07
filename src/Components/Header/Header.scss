@@ -1,0 +1,31 @@
+.header {
+  background-color: white;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px;
+  &__block-auth-reg {
+    display: flex;
+    gap: 29px;
+  }
+  &__sign-up {
+    all: unset;
+    color: rgba(82, 196, 26, 1);
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(82, 196, 26, 1);
+    transition: 0.6s;
+    &:hover {
+      color: white;
+      background-color: rgba(82, 196, 26, 1);
+    }
+  }
+  &__sign-in {
+    all: unset;
+    transition: 0.3s;
+    &:hover {
+      color: rgb(100, 100, 100);
+    }
+  }
+}
