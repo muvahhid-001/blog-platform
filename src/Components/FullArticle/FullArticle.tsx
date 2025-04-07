@@ -17,6 +17,9 @@ const fetchData = (slug: string) => async (dispatch: Dispatch) => {
     const response = await fetch(
       `https://blog-platform.kata.academy/api/articles/${slug}`
     );
+    if (response.ok === false) {
+      throw new Error("Failed...");
+    }
     const data = await response.json();
     dispatch({ type: FETCH_FULLARTICLE_SUCCESS, payload: data.article });
   } catch (error) {

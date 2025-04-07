@@ -9,9 +9,12 @@ export const FETCH_FULLARTICLE_FAILED = "FETCH_FULLARTICLE_FAILED";
 export const fetchArticles = (offset: number) => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_ARTICLES_REQUEST });
   try {
-    const response = await fetch(
+    const response: Response = await fetch(
       `https://blog-platform.kata.academy/api/articles?limit=10&offset=${offset}`
     );
+    if (response.ok === false) {
+      throw new Error("Failed...");
+    }
     const data = await response.json();
     dispatch({ type: FETCH_ARTICLES_SUCCESS, payload: data });
   } catch (error) {
