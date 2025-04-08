@@ -34,6 +34,18 @@ a {
     }
   }
 }
+@media (max-width: 410px) {
+  .register-container__input,
+  .auth-container__input,
+  .edit-profile-container__input {
+    max-width: 280px !important;
+  }
+  .register-container__button,
+  .auth-container__button,
+  .edit-profile-container__button {
+    margin-left: 12px !important;
+  }
+}
 @media (max-width: 480px) {
   .list-full-article {
     &__title {

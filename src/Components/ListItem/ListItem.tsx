@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import "./ListItem.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+import { useState } from "react";
 
 interface Author {
   username: string;
@@ -27,8 +30,9 @@ const ListItem = ({
   slug,
   author,
   tagList,
-  favoritesCount = 0,
+  favoritesCount,
   createdAt,
+  favorited,
 }: ListItemProps) => {
   const navigate = useNavigate();
   const goToFullArticle = () => {
@@ -39,6 +43,36 @@ const ListItem = ({
   const date = DateTime.fromISO(dateString);
   const formattedDate = date.toFormat("MMMM d, yyyy");
 
+  const user = useSelector((state: RootState) => state.articles);
+  const [like, setLike] = useState(favorited);
+  const [count, setCount] = useState(favoritesCount);
+
+  const handleFavorite = async () => {
+    try {
+      const response = await fetch(
+        `https://blog-platform.kata.academy/api/articles/${slug}/favorite`,
+        {
+          method: like ? "DELETE" : "POST",
+          headers: {
+            Authorization: `Bearer ${user.user.user.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        alert("Ошибка при добавлении в избранное!");
+        return;
+      }
+
+      const data = await response.json();
+      setLike(data.article.favorited);
+      setCount(data.article.favoritesCount);
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+  };
+
   return (
     <li className="list-article__item">
       <div className="list-article__up">
@@ -46,8 +80,15 @@ const ListItem = ({
           {title}
         </button>
         <div className="list-article__like-block">
-          <button className="list-article__heart"></button>
-          <p className="list-article__like-count">{favoritesCount}</p>
+          <button
+            className="list-article__heart"
+            disabled={!user.isLogin}
+            onClick={handleFavorite}
+            style={{
+              backgroundImage: `url("./${like ? "heart-red.png" : "heart.png"}")`,
+            }}
+          ></button>
+          <p className="list-article__like-count">{count}</p>
         </div>
         <div className="list-article__author">
           <div className="list-article__author-info">

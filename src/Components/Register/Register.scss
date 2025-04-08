@@ -1,0 +1,104 @@
+.register-block {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.register-container {
+  width: 100%;
+  max-width: 384px;
+  margin: 0 15px;
+  height: 599px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px 1px rgba(31, 31, 31, 0.2);
+  &__label {
+    margin-left: 25px;
+    font-size: 14px;
+  }
+  &__input[type="text"],
+  &__input[type="password"],
+  &__input[type="email"] {
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(217, 217, 217, 1);
+    margin-top: 5px;
+    margin-left: 25px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 320px;
+    height: 40px;
+  }
+  &__input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+  }
+  &__title {
+    text-align: center;
+    margin-top: 43px;
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  &__button {
+    all: unset;
+    cursor: pointer;
+    width: 100%;
+    max-width: 320px;
+    height: 40px;
+    margin-left: 27.5px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgba(24, 144, 255, 1);
+    color: white;
+    transition: 0.3s;
+    &:hover {
+      background-color: rgb(73, 167, 255);
+    }
+  }
+}
+.info-label {
+  margin-left: 5px;
+  position: relative;
+  top: -2px;
+  cursor: pointer;
+}
+.paragraph-block {
+  width: 100%;
+  max-width: 320px;
+  margin-left: 22px;
+  margin-bottom: 33px;
+}
+.label-text-info {
+  position: absolute;
+  top: 15px;
+  left: 0px;
+  cursor: pointer;
+}
+.paragraph-last {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(140, 140, 140, 1);
+}
+input::placeholder {
+  color: rgba(217, 217, 217, 1);
+}
+.border {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 320px;
+  border-radius: 5px;
+  border: 1px solid rgba(217, 217, 217, 1);
+}
+.paragraph-last-button {
+  all: unset;
+  cursor: pointer;
+  color: rgba(24, 144, 255, 1);
+  &:hover {
+    color: rgb(51, 156, 255);
+  }
+}
+.input-error {
+  border-color: red !important;
+  color: red !important;
+}

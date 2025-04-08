@@ -1,17 +1,26 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Header.scss";
+import HeaderGuest from "./HeaderGuest";
+import HeaderAuth from "./HeaderAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 
 const Header = () => {
+  const isLogin = useSelector((state: RootState) => state.articles.isLogin);
+
+  const navigate = useNavigate();
   return (
     <header>
       <div className="header">
-        <Link to="/">
-          <p className="header__title">Realworld Blog</p>
-        </Link>
-        <div className="header__block-auth-reg">
-          <button className="header__sign-in">Sign In</button>
-          <button className="header__sign-up">Sign Up</button>
-        </div>
+        <p
+          className="header__title"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Realworld Blog
+        </p>
+        {isLogin === false ? <HeaderGuest /> : <HeaderAuth />}
       </div>
     </header>
   );

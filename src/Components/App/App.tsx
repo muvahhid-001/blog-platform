@@ -2,20 +2,35 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchArticles } from "../../Redux/ArticlesActions";
 import { AppDispatch, RootState } from "../../Redux/store";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import "./App.scss";
 import ListArticle from "../ListArticle/ListArticle";
 import Spiner from "../Spin/Spin";
 import FullArticle from "../FullArticle/FullArticle";
 import AlertMsg from "../Alert/Alert";
+import Register from "../Register/Register";
+import Auth, { loginUser } from "../Login/Auth";
+import EditProfile from "../EditProfile/EditProfile";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const articles = useSelector((state: RootState) => state.articles.articles);
   useEffect(() => {
     dispatch(fetchArticles(0));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (localStorage.getItem("login")) {
+      loginUser(
+        localStorage.getItem("login"),
+        localStorage.getItem("password"),
+        dispatch,
+        navigate
+      );
+    }
+  }, []);
 
   const status = useSelector((state: RootState) => state.articles.status);
 
@@ -32,6 +47,9 @@ function App() {
               element={articles.length === 0 ? <Spiner /> : <ListArticle />}
             />
             <Route path="/article/:slug" element={<FullArticle />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
           </Routes>
         </>
       )}
