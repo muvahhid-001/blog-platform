@@ -1,6 +1,6 @@
-// Register.tsx
+import { createUser } from "../Api/Api";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import "./Register.scss";
 
 interface ErrorsInterface {
@@ -12,7 +12,7 @@ interface ErrorsInterface {
 }
 
 const Register = () => {
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -25,32 +25,6 @@ const Register = () => {
     repeatPassword: false,
     agree: false,
   });
-
-  const createUser = async (name: string, email: string, password: string) => {
-    const response = await fetch(
-      "https://blog-platform.kata.academy/api/users",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: {
-            username: name,
-            email: email,
-            password: password,
-          },
-        }),
-      }
-    );
-    if (response.ok) {
-      navigate("/sign-in");
-      alert("Успешная регистрация!");
-    } else {
-      alert("Логин или Почта уже используються!");
-      console.error("Error creating user:", response.status);
-    }
-  };
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
@@ -89,7 +63,7 @@ const Register = () => {
     }
     setErrors(newErrors);
     if (hasError) return;
-    createUser(username, email, password);
+    createUser(username, email, password, navigate);
   };
 
   return (

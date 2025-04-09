@@ -1,51 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../Redux/store";
-import { useNavigate } from "react-router-dom";
-import { LOG_OUT } from "../../Redux/ArticlesActions";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { editUser } from "../Api/Api";
 import "./EditProfile.scss";
-
-interface UserData {
-  email?: string;
-  username?: string;
-  image?: string;
-  password?: string;
-  bio: string;
-}
-
-const editUser = async (
-  email: string,
-  name: string,
-  img: string,
-  password: string,
-  dispatch: AppDispatch,
-  navigate: ReturnType<typeof useNavigate>
-) => {
-  const userData: UserData = {
-    bio: "Buga..ga, not edit bio, beeeee.",
-  };
-  if (email) userData.email = email;
-  if (name) userData.username = name;
-  if (img) userData.image = img;
-  if (password) userData.password = password;
-  const response = await fetch("https://blog-platform.kata.academy/api/user", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Token ${localStorage.getItem("token") || ""}`,
-    },
-    body: JSON.stringify({ user: userData }),
-  });
-  if (response.ok) {
-    alert("Данные успешно изменены!");
-    dispatch({ type: LOG_OUT });
-    navigate("/");
-    localStorage.clear();
-  } else {
-    alert("Ошибка изменении данных!");
-    console.error("Error updating user:", response.status);
-  }
-};
 
 interface ErrorsInterface {
   name?: boolean;
@@ -66,7 +24,7 @@ const EditProfile = () => {
     img: false,
   });
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
   const hungleClick = (event: React.FormEvent): void => {
     event.preventDefault();

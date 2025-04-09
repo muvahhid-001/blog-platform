@@ -10,7 +10,7 @@ import Spiner from "../Spin/Spin";
 import FullArticle from "../FullArticle/FullArticle";
 import AlertMsg from "../Alert/Alert";
 import Register from "../Register/Register";
-import Auth, { loginUser } from "../Login/Auth";
+import Auth, { loginUser } from "../Auth/Auth";
 import EditProfile from "../EditProfile/EditProfile";
 
 function App() {

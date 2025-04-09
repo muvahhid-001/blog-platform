@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { LOGIN_SUCCESSFULL } from "../../Redux/ArticlesActions";
 import { AppDispatch } from "../../Redux/store";
+import { loginUser } from "../Api/Api";
 import "./Auth.scss";
 
 interface ErrorsInterface {
@@ -15,44 +15,9 @@ const isValidEmail = (email: string): boolean => {
   return regex.test(email);
 };
 
-const loginUser = async (
-  email: string,
-  password: string,
-  dispatch: AppDispatch,
-  navigate: ReturnType<typeof useNavigate>
-) => {
-  const response = await fetch(
-    "https://blog-platform.kata.academy/api/users/login",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          email: email,
-          password: password,
-        },
-      }),
-    }
-  );
-
-  if (response.ok) {
-    const data = await response.json();
-    localStorage.setItem("token", data.user.token);
-    localStorage.setItem("login", email);
-    localStorage.setItem("password", password);
-    dispatch({ type: LOGIN_SUCCESSFULL, payload: data });
-    navigate("/");
-  } else {
-    alert("Неправильный логин или пароль!");
-    console.error("Error logging in:", response.status);
-  }
-};
-
 const Auth = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<ErrorsInterface>({

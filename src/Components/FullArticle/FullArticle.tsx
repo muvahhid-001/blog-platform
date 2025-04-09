@@ -2,40 +2,11 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../Redux/store";
+import { fetchData } from "../Api/Api";
 import { DateTime } from "luxon";
-import {
-  FETCH_FULLARTICLE_FAILED,
-  FETCH_FULLARTICLE_SUCCESS,
-} from "../../Redux/ArticlesActions";
 import "./FullArticle.scss";
-import { Dispatch } from "redux";
 import ReactMarkdown from "react-markdown";
 import Spiner from "../Spin/Spin";
-
-const fetchData = (slug: string, m?: boolean) => async (dispatch: Dispatch) => {
-  try {
-    const method = m === undefined ? "GET" : m ? "POST" : "DELETE";
-    const response = await fetch(
-      `https://blog-platform.kata.academy/api/articles/${slug}${m !== undefined ? "/favorite" : ""}`,
-      {
-        method: method,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (!response.ok) {
-      throw new Error("Failed...");
-    }
-    const data = await response.json();
-    dispatch({ type: FETCH_FULLARTICLE_SUCCESS, payload: data.article });
-    return data.article;
-  } catch (error) {
-    dispatch({ type: FETCH_FULLARTICLE_FAILED });
-    throw error;
-  }
-};
 
 const FullArticle = () => {
   const { slug } = useParams();
