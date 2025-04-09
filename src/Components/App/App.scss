@@ -34,6 +34,36 @@ a {
     }
   }
 }
+@media (max-width: 630px) {
+  .header {
+    &__block-auth-on {
+      gap: 15px;
+    }
+    &__create-article {
+      width: 40px;
+      padding: 2.5px 0;
+      font-size: 11px;
+    }
+    &__auth-name {
+      font-size: 14px;
+      left: 10px;
+    }
+    &__log-out {
+      font-size: 14px;
+      width: 60px;
+      height: 35px;
+    }
+  }
+}
+.error-text {
+  color: rgba(245, 34, 45, 1);
+  margin-left: 25px;
+  margin-top: 2px;
+  font-size: 14px;
+}
+.none {
+  display: none !important;
+}
 @media (max-width: 410px) {
   .register-container__input,
   .auth-container__input,

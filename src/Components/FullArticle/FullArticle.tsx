@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../Redux/store";
 import { DateTime } from "luxon";
@@ -12,39 +12,79 @@ import { Dispatch } from "redux";
 import ReactMarkdown from "react-markdown";
 import Spiner from "../Spin/Spin";
 
-const fetchData = (slug: string) => async (dispatch: Dispatch) => {
+const fetchData = (slug: string, m?: boolean) => async (dispatch: Dispatch) => {
   try {
+    const method = m === undefined ? "GET" : m ? "POST" : "DELETE";
     const response = await fetch(
-      `https://blog-platform.kata.academy/api/articles/${slug}`
+      `https://blog-platform.kata.academy/api/articles/${slug}${m !== undefined ? "/favorite" : ""}`,
+      {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
-    if (response.ok === false) {
+    if (!response.ok) {
       throw new Error("Failed...");
     }
     const data = await response.json();
     dispatch({ type: FETCH_FULLARTICLE_SUCCESS, payload: data.article });
+    return data.article;
   } catch (error) {
     dispatch({ type: FETCH_FULLARTICLE_FAILED });
+    throw error;
   }
 };
 
 const FullArticle = () => {
   const { slug } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    if (slug) {
-      dispatch(fetchData(slug));
-    }
-  }, [slug, dispatch]);
-
+  const isLogin = useSelector((state: RootState) => state.articles.isLogin);
+  console.log(isLogin);
   const fullArticle = useSelector(
     (state: RootState) => state.articles.fullArticle
   );
-  if (!fullArticle) return <Spiner />;
+  const [loading, setLoading] = useState(true);
+  const [likeLoading, setLikeLoading] = useState(false);
+  const [m, setM] = useState<boolean>(fullArticle?.favorited || false);
+  const [favoritesCount, setFavoritesCount] = useState<number>(
+    fullArticle?.favoritesCount || 0
+  );
 
-  const dateString = fullArticle.createdAt.toString();
-  const date = DateTime.fromISO(dateString);
+  useEffect(() => {
+    if (slug) {
+      setLoading(true);
+      dispatch(fetchData(slug))
+        .then((article) => {
+          setM(article.favorited);
+          setFavoritesCount(article.favoritesCount);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [slug, dispatch]);
+
+  const dateString = fullArticle?.createdAt.toString();
+  const date = DateTime.fromISO(dateString || "");
   const formattedDate = date.toFormat("MMMM d, yyyy");
+
+  const handleLike = async () => {
+    if (likeLoading) return;
+    setLikeLoading(true);
+    const newM = !m;
+    setM(newM);
+    try {
+      const updatedArticle = await dispatch(fetchData(slug, newM));
+      setFavoritesCount(updatedArticle.favoritesCount);
+    } catch (error) {
+      setM(!newM);
+      alert("Ошибка при добавлении в избранное!");
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
+  if (loading || !fullArticle) return <Spiner />;
 
   return (
     <div className="list-full-article">
@@ -54,10 +94,16 @@ const FullArticle = () => {
             {fullArticle.title}
           </button>
           <div className="list-full-article__like-block">
-            <button className="list-full-article__heart"></button>
-            <p className="list-full-article__like-count">
-              {fullArticle.favoritesCount}
-            </p>
+            <button
+              className="list-full-article__heart"
+              style={{
+                backgroundImage: `url("./${m ? "../../heart-red.png" : "../../heart.png"}")`,
+              }}
+              onClick={handleLike}
+              disabled={isLogin ? false : true}
+            ></button>
+            <p className="list-full-article__like-count">{favoritesCount}</p>
+            {likeLoading && <p className="anim-like-loading">-</p>}
           </div>
           <div className="list-full-article__author">
             <div className="list-full-article__author-info">
@@ -70,7 +116,7 @@ const FullArticle = () => {
               className="list-full-article__author-photo"
               src={fullArticle.author.image}
               alt={fullArticle.author.username}
-            ></img>
+            />
           </div>
         </div>
         <ul className="list-full-article__tag-list">

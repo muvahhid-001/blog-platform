@@ -10,6 +10,11 @@ interface ErrorsInterface {
   password?: boolean;
 }
 
+const isValidEmail = (email: string): boolean => {
+  const regex = /^\S+@\S+\.\S+$/;
+  return regex.test(email);
+};
+
 const loginUser = async (
   email: string,
   password: string,
@@ -57,18 +62,25 @@ const Auth = () => {
 
   const hundleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    let hasError = false;
+    const newErrors: ErrorsInterface = {};
 
-    if (!email.includes("@")) {
-      return setErrors({ email: true });
+    if (!email.trim() || !isValidEmail(email)) {
+      newErrors.email = true;
+      hasError = true;
     } else {
-      setErrors({ email: false });
+      newErrors.email = false;
     }
 
-    if (password.length < 6 || password.length > 16) {
-      return setErrors({ password: true });
+    if (!password.trim() || password.length < 6 || password.length > 40) {
+      newErrors.password = true;
+      hasError = true;
     } else {
-      setErrors({ password: false });
+      newErrors.password = false;
     }
+
+    setErrors(newErrors);
+    if (hasError) return;
 
     loginUser(email, password, dispatch, navigate);
   };
@@ -84,12 +96,13 @@ const Auth = () => {
               <br />
               <input
                 className={
-                  errors.email === true
+                  errors.email
                     ? "auth-container__input input-error"
                     : "auth-container__input"
                 }
                 type="text"
                 placeholder="User Address"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </p>
@@ -99,12 +112,13 @@ const Auth = () => {
               <br />
               <input
                 className={
-                  errors.password === true
+                  errors.password
                     ? "auth-container__input input-error"
                     : "auth-container__input"
                 }
                 type="password"
                 placeholder="Password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </p>

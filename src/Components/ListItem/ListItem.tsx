@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import "./ListItem.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Author {
   username: string;
@@ -35,19 +35,26 @@ const ListItem = ({
   favorited,
 }: ListItemProps) => {
   const navigate = useNavigate();
-  const goToFullArticle = () => {
+
+  const goToFullArticle = (): void => {
     navigate(`/article/${slug}`);
   };
 
-  const dateString = createdAt.toString();
-  const date = DateTime.fromISO(dateString);
+  const date = DateTime.fromISO(createdAt.toString());
   const formattedDate = date.toFormat("MMMM d, yyyy");
-
   const user = useSelector((state: RootState) => state.articles);
   const [like, setLike] = useState(favorited);
   const [count, setCount] = useState(favoritesCount);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+  useEffect(() => {
+    setLike(favorited);
+    setCount(favoritesCount);
+  }, [favorited, favoritesCount]);
 
   const handleFavorite = async () => {
+    if (favoriteLoading) return;
+    setFavoriteLoading(true);
     try {
       const response = await fetch(
         `https://blog-platform.kata.academy/api/articles/${slug}/favorite`,
@@ -59,17 +66,18 @@ const ListItem = ({
           },
         }
       );
-
       if (!response.ok) {
         alert("Ошибка при добавлении в избранное!");
+        setFavoriteLoading(false);
         return;
       }
-
       const data = await response.json();
       setLike(data.article.favorited);
       setCount(data.article.favoritesCount);
     } catch (error) {
       console.error("Ошибка:", error);
+    } finally {
+      setFavoriteLoading(false);
     }
   };
 
@@ -82,13 +90,14 @@ const ListItem = ({
         <div className="list-article__like-block">
           <button
             className="list-article__heart"
-            disabled={!user.isLogin}
+            disabled={!user.isLogin || favoriteLoading}
             onClick={handleFavorite}
             style={{
               backgroundImage: `url("./${like ? "heart-red.png" : "heart.png"}")`,
             }}
           ></button>
           <p className="list-article__like-count">{count}</p>
+          {favoriteLoading && <p className="anim-like-loading">-</p>}
         </div>
         <div className="list-article__author">
           <div className="list-article__author-info">
@@ -99,7 +108,7 @@ const ListItem = ({
             className="list-article__author-photo"
             src={author.image}
             alt={author.username}
-          ></img>
+          />
         </div>
       </div>
       <ul className="list-article__tag-list">

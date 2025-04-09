@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
+// Register.tsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Register.scss";
 
 interface ErrorsInterface {
@@ -42,9 +43,8 @@ const Register = () => {
         }),
       }
     );
-
     if (response.ok) {
-      navigate("/auth");
+      navigate("/sign-in");
       alert("Успешная регистрация!");
     } else {
       alert("Логин или Почта уже используються!");
@@ -52,41 +52,46 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
+    let hasError = false;
+    const newErrors: ErrorsInterface = {};
 
-    if (username.length > 16 || username.length < 6) {
-      return setErrors({ username: true });
+    if (username.length < 3 || username.length > 16) {
+      newErrors.username = true;
+      hasError = true;
     } else {
-      setErrors({ username: false });
+      newErrors.username = false;
     }
-
     if (!email.includes("@")) {
-      return setErrors({ email: true });
+      newErrors.email = true;
+      hasError = true;
     } else {
-      setErrors({ email: false });
+      newErrors.email = false;
     }
-
-    if (password.length < 6 || password.length > 16) {
-      return setErrors({ password: true });
+    if (password.length < 6 || password.length > 20) {
+      newErrors.password = true;
+      hasError = true;
     } else {
-      setErrors({ password: false });
+      newErrors.password = false;
     }
-
     if (password !== repeatPassword) {
-      return setErrors({ repeatPassword: true });
+      newErrors.repeatPassword = true;
+      hasError = true;
     } else {
-      setErrors({ repeatPassword: false });
+      newErrors.repeatPassword = false;
     }
-
     if (!agree) {
-      return setErrors({ agree: true });
+      newErrors.agree = true;
+      hasError = true;
     } else {
-      setErrors({ agree: false });
+      newErrors.agree = false;
     }
-
+    setErrors(newErrors);
+    if (hasError) return;
     createUser(username, email, password);
   };
+
   return (
     <main>
       <div className="register-block">
@@ -98,7 +103,7 @@ const Register = () => {
               <br />
               <input
                 className={
-                  errors.username === true
+                  errors.username
                     ? "register-container__input input-error"
                     : "register-container__input"
                 }
@@ -106,14 +111,16 @@ const Register = () => {
                 placeholder="Username"
                 onChange={(e) => setUsername(e.target.value)}
               />
+              <p className={errors.username ? "error-text" : "error-text none"}>
+                Username must be between 3 and 20 characters
+              </p>
             </p>
-
             <p className="register-container__paragraph">
               <label className="register-container__label">Email address</label>
               <br />
               <input
                 className={
-                  errors.email === true
+                  errors.email
                     ? "register-container__input input-error"
                     : "register-container__input"
                 }
@@ -121,14 +128,16 @@ const Register = () => {
                 placeholder="Email address"
                 onChange={(e) => setEmail(e.target.value)}
               />
+              <p className={errors.email ? "error-text" : "error-text none"}>
+                Enter a valid email address
+              </p>
             </p>
-
             <p className="register-container__paragraph">
               <label className="register-container__label">Password</label>
               <br />
               <input
                 className={
-                  errors.password === true
+                  errors.password
                     ? "register-container__input input-error"
                     : "register-container__input"
                 }
@@ -136,8 +145,10 @@ const Register = () => {
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <p className={errors.password ? "error-text" : "error-text none"}>
+                Password length must be between 6 and 40
+              </p>
             </p>
-
             <p className="register-container__paragraph">
               <label className="register-container__label">
                 Repeat Password
@@ -145,7 +156,7 @@ const Register = () => {
               <br />
               <input
                 className={
-                  errors.repeatPassword === true
+                  errors.repeatPassword
                     ? "register-container__input input-error"
                     : "register-container__input"
                 }
@@ -153,6 +164,13 @@ const Register = () => {
                 placeholder="Password"
                 onChange={(e) => setRepeatPassword(e.target.value)}
               />
+              <p
+                className={
+                  errors.repeatPassword ? "error-text" : "error-text none"
+                }
+              >
+                Passwords must match
+              </p>
             </p>
             <div className="border"></div>
             <p className="register-container__paragraph paragraph-block">
@@ -164,7 +182,7 @@ const Register = () => {
               />
               <label
                 className={
-                  errors.agree === true
+                  errors.agree
                     ? "register-container__label info-label input-error"
                     : "register-container__label info-label"
                 }
@@ -173,7 +191,7 @@ const Register = () => {
                 I agree to the processing of my personal{" "}
                 <span
                   className={
-                    errors.agree === true
+                    errors.agree
                       ? "label-text-info input-error"
                       : "label-text-info"
                   }
@@ -182,7 +200,6 @@ const Register = () => {
                 </span>
               </label>
             </p>
-
             <button type="submit" className="register-container__button">
               Create
             </button>

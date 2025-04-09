@@ -20,7 +20,6 @@ function App() {
   useEffect(() => {
     dispatch(fetchArticles(0));
   }, [dispatch]);
-
   useEffect(() => {
     if (localStorage.getItem("login")) {
       loginUser(
@@ -47,9 +46,9 @@ function App() {
               element={articles.length === 0 ? <Spiner /> : <ListArticle />}
             />
             <Route path="/article/:slug" element={<FullArticle />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/sign-up" element={<Register />} />
+            <Route path="/sign-in" element={<Auth />} />
+            <Route path="/profile" element={<EditProfile />} />
           </Routes>
         </>
       )}

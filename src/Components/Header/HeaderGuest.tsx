@@ -8,7 +8,7 @@ const HeaderGuest = () => {
         <button
           className="header__sign-in"
           onClick={() => {
-            navigate("/auth");
+            navigate("/sign-in");
           }}
         >
           Sign In
@@ -16,7 +16,7 @@ const HeaderGuest = () => {
         <button
           className="header__sign-up"
           onClick={() => {
-            navigate("/register");
+            navigate("/sign-up");
           }}
         >
           Sign Up
