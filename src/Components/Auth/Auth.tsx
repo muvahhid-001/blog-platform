@@ -96,7 +96,7 @@ const Auth = () => {
               <button
                 className="paragraph-last-button"
                 onClick={() => {
-                  navigate("/register");
+                  navigate("/sign-up");
                 }}
               >
                 Sign Up

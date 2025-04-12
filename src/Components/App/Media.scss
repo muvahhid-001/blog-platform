@@ -51,6 +51,11 @@
   .edit-profile-container__button {
     margin-left: 12px !important;
   }
+  .list-full-article__like-block {
+    position: absolute;
+    bottom: -12px;
+    right: 15px;
+  }
 }
 @media (max-width: 480px) {
   .list-full-article {

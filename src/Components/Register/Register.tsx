@@ -72,7 +72,7 @@ const Register = () => {
         <div className="register-container">
           <h2 className="register-container__title">Create new account</h2>
           <form className="register-container__form" onSubmit={handleSubmit}>
-            <p className="register-container__paragraph">
+            <div className="register-container__paragraph">
               <label className="register-container__label">Username</label>
               <br />
               <input
@@ -88,8 +88,8 @@ const Register = () => {
               <p className={errors.username ? "error-text" : "error-text none"}>
                 Username must be between 3 and 20 characters
               </p>
-            </p>
-            <p className="register-container__paragraph">
+            </div>
+            <div className="register-container__paragraph">
               <label className="register-container__label">Email address</label>
               <br />
               <input
@@ -105,8 +105,8 @@ const Register = () => {
               <p className={errors.email ? "error-text" : "error-text none"}>
                 Enter a valid email address
               </p>
-            </p>
-            <p className="register-container__paragraph">
+            </div>
+            <div className="register-container__paragraph">
               <label className="register-container__label">Password</label>
               <br />
               <input
@@ -122,8 +122,8 @@ const Register = () => {
               <p className={errors.password ? "error-text" : "error-text none"}>
                 Password length must be between 6 and 40
               </p>
-            </p>
-            <p className="register-container__paragraph">
+            </div>
+            <div className="register-container__paragraph">
               <label className="register-container__label">
                 Repeat Password
               </label>
@@ -145,9 +145,9 @@ const Register = () => {
               >
                 Passwords must match
               </p>
-            </p>
+            </div>
             <div className="border"></div>
-            <p className="register-container__paragraph paragraph-block">
+            <div className="register-container__paragraph paragraph-block">
               <input
                 className="register-container__input"
                 type="checkbox"
@@ -173,22 +173,22 @@ const Register = () => {
                   information
                 </span>
               </label>
-            </p>
+            </div>
             <button type="submit" className="register-container__button">
               Create
             </button>
-            <p className="register-container__paragraph paragraph-last">
+            <div className="register-container__paragraph paragraph-last">
               Already have an account?{" "}
               <button
                 className="paragraph-last-button"
                 onClick={() => {
-                  navigate("/auth");
+                  navigate("/sign-in");
                 }}
               >
                 Sign In
               </button>
               .
-            </p>
+            </div>
           </form>
         </div>
       </div>
