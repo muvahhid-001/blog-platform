@@ -109,28 +109,34 @@
   }
 }
 @media screen and (max-width: 768px) {
-  .edit-article {
+  .edit-article,
+  .new-article {
     padding: 0 20px;
     max-width: 100%;
   }
-  .edit-article__tags {
+  .edit-article__tags,
+  .new-article__tags {
     width: 100%;
   }
-  .edit-article__tag-row {
+  .edit-article__tag-row,
+  .new-article__tag-row {
     flex-direction: column;
     align-items: stretch;
   }
-  .edit-article__tag-input {
+  .edit-article__tag-input,
+  .new-article__tag-input {
     max-width: 100%;
     min-width: 100%;
     margin-bottom: 5px;
   }
-  .edit-article__delete {
+  .edit-article__delete,
+  .new-article__delete {
     width: 100%;
     margin-left: 0;
     margin-top: 5px;
   }
-  .edit-article__add-tag {
+  .edit-article__add-tag,
+  .new-article__add-tag {
     width: 100%;
     margin-left: 10px;
     margin-top: 5px;
