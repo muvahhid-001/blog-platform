@@ -16,7 +16,7 @@ const HeaderAuth = () => {
         <button
           className="header__create-article"
           onClick={() => {
-            navigate("/");
+            navigate("/new-article");
           }}
         >
           Create article

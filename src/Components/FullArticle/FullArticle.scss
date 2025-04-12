@@ -3,6 +3,27 @@
   display: flex;
   justify-content: center;
   margin-top: 40px;
+  &__edit-button {
+    position: absolute;
+    right: 20px;
+    top: 75px;
+    display: flex;
+    gap: 10px;
+  }
+  &__edit {
+    all: unset;
+    width: 65px;
+    height: 31px;
+    border: 1.5px solid rgba(82, 196, 26, 1);
+    text-align: center;
+    color: rgba(82, 196, 26, 1);
+    border-radius: 5px;
+    transition: 0.3s;
+    &:hover {
+      color: white;
+      background-color: #27ae60;
+    }
+  }
   &__item {
     margin: 0 15px;
     position: relative;

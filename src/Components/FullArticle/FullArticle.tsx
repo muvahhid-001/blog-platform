@@ -1,8 +1,9 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import PopConFirm from "../PopConFirm/PopConFirm";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../Redux/store";
-import { fetchData } from "../Api/Api";
+import { checkArticle, fetchData } from "../Api/Api";
 import { DateTime } from "luxon";
 import "./FullArticle.scss";
 import ReactMarkdown from "react-markdown";
@@ -11,8 +12,8 @@ import Spiner from "../Spin/Spin";
 const FullArticle = () => {
   const { slug } = useParams();
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const isLogin = useSelector((state: RootState) => state.articles.isLogin);
-  console.log(isLogin);
   const fullArticle = useSelector(
     (state: RootState) => state.articles.fullArticle
   );
@@ -21,6 +22,9 @@ const FullArticle = () => {
   const [m, setM] = useState<boolean>(fullArticle?.favorited || false);
   const [favoritesCount, setFavoritesCount] = useState<number>(
     fullArticle?.favoritesCount || 0
+  );
+  const statusAuthor = useSelector(
+    (state: RootState) => state.articles.statusArticle
   );
 
   useEffect(() => {
@@ -35,7 +39,13 @@ const FullArticle = () => {
     }
   }, [slug, dispatch]);
 
-  const dateString = fullArticle?.createdAt.toString();
+  useEffect(() => {
+    checkArticle(slug, dispatch);
+  }, []);
+
+  if (loading || !fullArticle) return <Spiner />; // Проверка, пока данные не загружены
+
+  const dateString = fullArticle.createdAt.toString();
   const date = DateTime.fromISO(dateString || "");
   const formattedDate = date.toFormat("MMMM d, yyyy");
 
@@ -55,7 +65,12 @@ const FullArticle = () => {
     }
   };
 
-  if (loading || !fullArticle) return <Spiner />;
+  const oldInfo = {
+    title: fullArticle.title,
+    descriptions: fullArticle.description,
+    body: fullArticle.body,
+    tagList: fullArticle.tagList,
+  };
 
   return (
     <div className="list-full-article">
@@ -89,6 +104,19 @@ const FullArticle = () => {
               alt={fullArticle.author.username}
             />
           </div>
+          {statusAuthor === true && slug ? (
+            <div className="list-full-article__edit-button">
+              <PopConFirm slug={slug} navigate={navigate} />
+              <button
+                className="list-full-article__edit"
+                onClick={() =>
+                  navigate(`/articles/${slug}/edit`, { state: oldInfo })
+                }
+              >
+                Edit
+              </button>
+            </div>
+          ) : null}
         </div>
         <ul className="list-full-article__tag-list">
           {fullArticle.tagList.slice(0, 6).map((tag, index) => (

@@ -7,6 +7,8 @@ export const FETCH_FULLARTICLE_SUCCESS = "FETCH_FULLARTICLE_SUCCESS";
 export const FETCH_FULLARTICLE_FAILED = "FETCH_FULLARTICLE_FAILED";
 export const LOGIN_SUCCESSFULL = "LOGIN_SUCCESSFULL";
 export const LOG_OUT = "LOG_OUT";
+export const ADD_STATUS = "ADD_STATUS";
+export const DEL_STATUS = "DEL_STATUS";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");

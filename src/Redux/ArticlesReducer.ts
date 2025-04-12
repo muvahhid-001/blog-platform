@@ -6,6 +6,8 @@ import {
   FETCH_FULLARTICLE_FAILED,
   LOGIN_SUCCESSFULL,
   LOG_OUT,
+  ADD_STATUS,
+  DEL_STATUS,
 } from "./ArticlesActions";
 
 interface Author {
@@ -44,6 +46,7 @@ interface ArticlesState {
   status: "idle" | "loading" | "succeeded" | "failed";
   isLogin: boolean;
   user: User;
+  statusArticle: boolean;
 }
 
 type PayLoad =
@@ -56,6 +59,8 @@ type PayLoad =
   | { type: typeof LOG_OUT }
   | { type: typeof FETCH_FULLARTICLE_SUCCESS; payload: Article }
   | { type: typeof LOGIN_SUCCESSFULL; payload: object }
+  | { type: typeof ADD_STATUS }
+  | { type: typeof DEL_STATUS }
   | { type: typeof FETCH_FULLARTICLE_FAILED };
 
 const initialState: ArticlesState = {
@@ -65,6 +70,7 @@ const initialState: ArticlesState = {
   status: "idle",
   isLogin: false,
   user: {},
+  statusArticle: false,
 };
 
 const articlesReducer = (
@@ -91,6 +97,10 @@ const articlesReducer = (
       return { ...state, isLogin: true, user: action.payload };
     case LOG_OUT:
       return { ...state, isLogin: false };
+    case ADD_STATUS:
+      return { ...state, statusArticle: true };
+    case DEL_STATUS:
+      return { ...state, statusArticle: false };
     default:
       return state;
   }

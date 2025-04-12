@@ -1,6 +1,8 @@
 import { AppDispatch } from "../../Redux/store";
 import { Dispatch } from "redux";
 import {
+  ADD_STATUS,
+  DEL_STATUS,
   FETCH_FULLARTICLE_FAILED,
   FETCH_FULLARTICLE_SUCCESS,
   LOGIN_SUCCESSFULL,
@@ -15,7 +17,7 @@ interface UserData {
   bio: string;
 }
 
-const api_key = "https://blog-platform.kata.academy/api";
+const url = "https://blog-platform.kata.academy/api";
 
 export const loginUser = async (
   email: string,
@@ -23,7 +25,7 @@ export const loginUser = async (
   dispatch: AppDispatch,
   navigate: (path: string) => void
 ) => {
-  const response = await fetch(`${api_key}/users/login`, {
+  const response = await fetch(`${url}/users/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -38,6 +40,7 @@ export const loginUser = async (
 
   if (response.ok) {
     const data = await response.json();
+    localStorage.setItem("name", data.user.username);
     localStorage.setItem("token", data.user.token);
     localStorage.setItem("login", email);
     localStorage.setItem("password", password);
@@ -55,7 +58,7 @@ export const createUser = async (
   password: string,
   navigate: (path: string) => void
 ) => {
-  const response = await fetch(`${api_key}/users`, {
+  const response = await fetch(`${url}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -92,7 +95,7 @@ export const editUser = async (
   if (name) userData.username = name;
   if (img) userData.image = img;
   if (password) userData.password = password;
-  const response = await fetch(`${api_key}/user`, {
+  const response = await fetch(`${url}/user`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -116,7 +119,7 @@ export const fetchData =
     try {
       const method = m === undefined ? "GET" : m ? "POST" : "DELETE";
       const response = await fetch(
-        `${api_key}/articles/${slug}${m !== undefined ? "/favorite" : ""}`,
+        `${url}/articles/${slug}${m !== undefined ? "/favorite" : ""}`,
         {
           method: method,
           headers: {
@@ -136,3 +139,121 @@ export const fetchData =
       throw error;
     }
   };
+
+export interface ArticleData {
+  title: string;
+  description: string;
+  body: string;
+  tagList: string[];
+}
+
+export async function createArticle(
+  article: ArticleData,
+  navigate: (path: string) => void
+): Promise<void> {
+  try {
+    const response = await fetch(`${url}/articles`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ article }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.message || "Failed to create article");
+    }
+
+    alert("Поздравляем... Вы успешно поделились чем-то новым!");
+    navigate("/");
+  } catch (error) {
+    alert("Хмм... Ошибка в данных! Или же ServerDied...");
+    console.error("Ошибка при создании статьи:", error);
+  }
+}
+
+export const checkArticle = async (slug: string, dispatch) => {
+  try {
+    const response = await fetch(`${url}/articles/${slug}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    if (data.article.author.username === localStorage.getItem("name")) {
+      dispatch({ type: ADD_STATUS });
+    } else {
+      dispatch({ type: DEL_STATUS });
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.message || "Failed to check article");
+    }
+  } catch (error) {
+    console.error("Ошибка при проверки статьи:", error);
+  }
+};
+
+export const deleteArticle = async (
+  slug: string,
+  navigate: (path: string) => void
+) => {
+  try {
+    const response = await fetch(`${url}/articles/${slug}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      alert("Упс... Удаление не удалось.");
+      const errorData = await response.json();
+      throw new Error(errorData?.message || "Failed to delete article");
+    }
+    alert("Статья успешно удалена!");
+    navigate("/");
+  } catch (error) {
+    console.error("Ошибка при проверки статьи:", error);
+  }
+};
+
+interface EditData {
+  article: {
+    title: string;
+    description: string;
+    body: string;
+    tagList: string[];
+  };
+}
+
+export const editArticle = async (
+  slug: string,
+  editData: EditData,
+  navigate: (path: string) => void
+) => {
+  try {
+    const response = await fetch(`${url}/articles/${slug}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editData),
+    });
+    if (!response.ok) {
+      alert("Упс... Редактирование не удалось.");
+      const errorData = await response.json();
+      throw new Error(errorData?.message || "Failed to delete article");
+    }
+    alert("Статья успешно отредактирована!");
+    navigate("/");
+  } catch (error) {
+    console.error("Ошибка при редактировании статьи:", error);
+  }
+};

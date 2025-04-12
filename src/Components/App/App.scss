@@ -1,7 +1,10 @@
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
+
 body {
+  overflow-x: hidden;
   background-color: #eaeef2;
   padding: 0;
   font-family: "Inter";
@@ -23,111 +26,6 @@ header {
 a {
   text-decoration: none;
   color: inherit;
-}
-@media (max-width: 720px) {
-  .list-full-article {
-    &__title {
-      max-width: 300px !important;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
-}
-@media (max-width: 630px) {
-  .header {
-    &__block-auth-on {
-      gap: 15px;
-    }
-    &__create-article {
-      width: 40px;
-      padding: 2.5px 0;
-      font-size: 11px;
-    }
-    &__auth-name {
-      font-size: 14px;
-      left: 10px;
-    }
-    &__log-out {
-      font-size: 14px;
-      position: relative;
-      right: 10px;
-      width: 60px;
-      height: 35px;
-    }
-  }
-}
-.error-text {
-  color: rgba(245, 34, 45, 1);
-  margin-left: 25px;
-  margin-top: 2px;
-  font-size: 14px;
-}
-.none {
-  display: none !important;
-}
-@media (max-width: 410px) {
-  .register-container__input,
-  .auth-container__input,
-  .edit-profile-container__input {
-    max-width: 280px !important;
-  }
-  .register-container__button,
-  .auth-container__button,
-  .edit-profile-container__button {
-    margin-left: 12px !important;
-  }
-}
-@media (max-width: 480px) {
-  .list-full-article {
-    &__title {
-      font-size: 14px !important;
-      max-width: 150px !important;
-    }
-    &__description {
-      font-size: 13px !important;
-    }
-    &__body {
-      font-size: 13px !important;
-    }
-    &__author-name {
-      font-size: 14px !important;
-    }
-    &__author-time {
-      font-size: 10px !important;
-    }
-    &__author {
-      right: 6px !important;
-    }
-  }
-  .list-article {
-    &__author-name {
-      font-size: 14px !important;
-    }
-    &__author-time {
-      font-size: 10px !important;
-    }
-    &__tag-item {
-      max-width: 100px !important;
-      font-size: 8px !important;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    &__title {
-      width: 100%;
-      max-width: 100px !important;
-      font-size: 14px !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    &__description {
-      width: 300px;
-      font-size: 11px !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
 }
 @font-face {
   font-family: "Inter";
