@@ -43,6 +43,7 @@ export const loginUser = async (
     localStorage.setItem("name", data.user.username);
     localStorage.setItem("token", data.user.token);
     localStorage.setItem("login", email);
+localStorage.setItem("password", password);
     dispatch({ type: LOGIN_SUCCESSFULL, payload: data });
     navigate("/");
   } else {
